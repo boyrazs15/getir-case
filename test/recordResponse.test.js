@@ -26,6 +26,19 @@ describe("HTTP POST API endpoint", () => {
         expect(result.body.code).toBe(1001)
         done()
     })
+    it("should get 500 status because of wrong maxCount and minCount params", async done => {
+        const result = await request(app)
+            .post("/api/v1/records")
+            .send({
+                "startDate": "2016-01-26",
+                "endDate": "20-02-60",
+                "minCount": 5000,
+                "maxCount": 3000
+            })
+        expect(result.status).toBe(500)
+        expect(result.body.code).toBe(1005)
+        done()
+    })
     it("should get 500 status because of missing parameters", async done => {
         const result = await request(app)
             .post("/api/v1/records")

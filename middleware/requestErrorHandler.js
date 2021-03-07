@@ -19,6 +19,14 @@ module.exports.isRequestParamsValid = function(req, res, next) {
     return ; 
   }
 
+  if(minCount>maxCount) {
+    res.status(500).json({
+      code: 1005,
+      msg: 'minCount must be smaller than or equal to maxCount.'
+    });
+    return ;
+  }
+
   if(!moment(startDate, "YYYY-MM-DD", true).isValid() || !moment(endDate, "YYYY-MM-DD", true).isValid()){
     res.status(500).json({
         code: 1002,
