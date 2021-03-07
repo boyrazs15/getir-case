@@ -1,8 +1,9 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const morgan = require('morgan');
 const connectDB = require('./config/db');
 const app = express();
-const recordController = require('./controller/recordController');
+const route = require('./route/records');
 
 // Load env vars
 dotenv.config({ path: './config/.env' });
@@ -23,16 +24,15 @@ process.on('unhandledRejection', (err, promise) => {
     server.close(()=> process.exit(1));
 });
 
+// Dev logging middleware
+if(process.env.NODE_ENV === 'development'){
+    app.use(morgan('dev'));
+}
+
 app.use(express.json()); 
+app.use(express.urlencoded({ extended: false }));
 
-app.use(
-  express.urlencoded({
-    extended: false
-  })
-);
-
-const route = require('./route/records');
-//need another routes
-app.use('/records', route);
+//need routes
+app.use('/api/v1/', route);
 
 module.exports = app;
